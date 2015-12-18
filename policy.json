@@ -1,0 +1,28 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "DynamoDBPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "dynamodb:GetItem",
+                "dynamodb:UpdateItem"
+            ],
+            "Resource": [
+                "arn:aws:dynamodb:*:*:table/*-stack-MasterIPTable*"
+            ]
+        },
+        {
+            "Sid": "ElasticBeanstalkPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "autoscaling:DescribeAutoScalingGroups",
+                "cloudformation:ListStackResources",
+                "elasticbeanstalk:DescribeEnvironmentResources"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
