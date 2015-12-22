@@ -66,7 +66,7 @@ def main
 
     # write the .foreman file with zero master processes and number of cores
     # available follower proceses
-    File.open('.foreman', "w") { |f| f.print "concurrency: locust-master=1,locust-follower=#{num_cores}" }
+    File.open('.foreman', "w") { |f| f.print "concurrency: locust-master=0,locust-follower=#{num_cores}" }
   end
 
   # Recreate the application.conf since we have modified the .foreman file
