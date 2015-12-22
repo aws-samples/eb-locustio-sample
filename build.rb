@@ -127,7 +127,7 @@ def write_master_ip(table_name, key, ip)
         ":rc" => 0,
         ":val" => ip,
         ":time" => update_time.to_i,
-        ":timeout" => (update_time - [(num_instances * 2).to_i, 45].min),
+        ":timeout" => (update_time - [(num_instances * 2).to_i, 45].min).to_i,
         ":num_min_reads" => num_instances - 1
       }
     )
