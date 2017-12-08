@@ -27,19 +27,23 @@ def main
   # read environment variables using the get-config utility
   env_vars = JSON.parse(%x(/opt/elasticbeanstalk/bin/get-config environment))
 
+  # read the Elastic Beanstalk deployment manifest
+  dep_manifest = JSON.parse(File.read('/tmp/manifest'))
+
   # read the private IP of the instance from the metadata service
   private_ip = open('http://169.254.169.254/latest/meta-data/local-ipv4').read
-
+  
   # get the number of CPU cores available
   num_cores = get_num_cores()
 
   eb_env_name = env_vars["EB_ENV_NAME"]
   master_ip_table = env_vars["MASTER_IP_TABLE"]
+  deployment_id = dep_manifest["DeploymentId"]
 
   # Use DynamoDB conditional update to select a master and save it's IP.
   # Only a single instance will be able to update the record, all others
   # will fail the conditional check
-  is_master = write_master_ip(master_ip_table, eb_env_name, private_ip)
+  is_master = write_master_ip(master_ip_table, eb_env_name, private_ip, deployment_id)
 
   puts "We are " + (is_master ? "master" : "follower")
 
@@ -111,24 +115,24 @@ def get_num_instances_in_environment(env_name)
   end
 end
 
-def write_master_ip(table_name, key, ip)
+def write_master_ip(table_name, key, ip, deployment_id)
   begin
     update_time = Time.now()
+    instance_id = open('http://169.254.169.254/latest/meta-data/instance-id').read
     num_instances = get_num_instances_in_environment(key)
 
     $ddb.update_item(
       :table_name => table_name,
       :key => { :HashKey => key },
-      :update_expression => "SET IP = :val, ChangedAt = :time, ReadCount = :rc",
-      :condition_expression => "attribute_not_exists(ReadCount) \
-                                OR ReadCount >= :num_min_reads \
-                                OR ChangedAt <= :timeout",
+      :update_expression => "SET IP = :val, ChangedAt = :time, ReadCount = :rc, 
+                             DeploymentID = :dep_id, InstanceID = :inst_id",
+      :condition_expression => "attribute_not_exists(DeploymentID) OR DeploymentID < :dep_id",
       :expression_attribute_values => {
         ":rc" => 0,
         ":val" => ip,
-        ":time" => update_time.to_i,
-        ":timeout" => (update_time - [(num_instances * 2).to_i, 45].min).to_i,
-        ":num_min_reads" => num_instances - 1
+        ":time" => update_time.to_s,
+        ":inst_id" => instance_id,
+        ":dep_id" => deployment_id
       }
     )
 

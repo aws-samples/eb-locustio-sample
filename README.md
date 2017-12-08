@@ -19,12 +19,9 @@ You can get started using the following steps:
   5. Once the environment creation process completes, run `eb open` to open the [Locust](http://locust.io/) dashboard and start your tests.
   6. To make changes to the test definition, edit the *[locustfile.py](locustfile.py)*, save and commit the changes, and run `eb deploy`.
   7. If you'd like to scale out the environment to more than 1 EC2 instance,
-    1. Run `eb config`, it'll open the configuration file in the default editor.
-    2. Set the `BatchSize` option under the `aws:elasticbeanstalk:command` namespace to `100`.
-    3. Save the configuration file and exit the editor. This will start the environment update.
-    4. After the update completes, run `eb scale <number of instances>`. Replace `<number of instances>` with the number of EC2 instances you would like the environment to scale out to.
-    5. After the additional instances have been added, run `eb deploy` to reselect the master instance.
-    6. Run `eb open` to open the [Locust](http://locust.io/) dashboard and start your tests.
+    1. Run `eb scale <number of instances>`. Replace `<number of instances>` with the number of EC2 instances you would like the environment to scale out to.
+    2. If you reducing the number of running instances in the above step, run `eb deploy` to reselect the master instance removal has been completed.
+    3. Run `eb open` to open the [Locust](http://locust.io/) dashboard and start your tests.
   8. When you are done with your tests, run `eb terminate --all` to clean up.
 
-*Note: Running Locust in distributed mode requires a master/slave architecture. The sample application selects a master on each deployment, which requires `eb deploy` to be run after you change the number of instances running in the environment. Also, this sample requires that the auto scaling minimum and maximum be set to the same value*
+*Note: Running Locust in distributed mode requires a master/slave architecture. This sample requires that the auto scaling minimum and maximum be set to the same value to ensure that the master isn't terminated by auto scaling. If for some reason the master instance is replaced, an `eb deploy` should be all it takes to fix it.*
