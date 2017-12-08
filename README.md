@@ -14,6 +14,7 @@ You can get started using the following steps:
      7. Choose whether you want SSH access to the Amazon EC2 instances.  
         *Note: If you choose to enable SSH and do not have an existing SSH key stored on AWS, the EB CLI requires ssh-keygen to be available on the path to generate SSH keys.*  
   4. Run `eb create -i c4.large --scale 1 --envvars TARGET_URL=<test URL> --instance_profile aws-elasticbeanstalk-locust-role` to begin the creation of your load generation environment. Replace `<test URL>` with the URL of the web app that you want to test.
+  *Note: If you don't have a default VPC (most AWS accounts created in 2014 or later should have a default VPC in the account) in your account, please substitue the above instance type with c3.large.*
      1. Enter the environment name of your choice.
      2. Enter the CNAME prefix you want to use for this environment.
   5. Once the environment creation process completes, run `eb open` to open the [Locust](http://locust.io/) dashboard and start your tests.
