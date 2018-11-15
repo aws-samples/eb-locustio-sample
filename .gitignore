@@ -1,0 +1,7 @@
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
+.virtualenv
+.env
+site-locustfile.py
+.DS_Store
