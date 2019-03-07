@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  InstanceProfileName:
+    Description: IAM instance profile name
+    Type: String
+
+Resources:
+  LocustServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: elasticbeanstalk-locust-role
+      AssumeRolePolicyDocument:
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - ec2.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: elasticbeanstalk-locust-policy
+        PolicyDocument:
+          Version: '2012-10-17'
+          Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetItem
+              - dynamodb:UpdateItem
+            Resource:
+            - 'arn:aws:dynamodb:*:*:table/*-stack-MasterIPTable*'
+          - Effect: Allow
+            Action:
+              - autoscaling:DescribeAutoScalingGroups
+              - cloudformation:ListStackResources
+              - elasticbeanstalk:DescribeEnvironmentResources
+            Resource: '*'
+  LocustServiceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+        InstanceProfileName: !Ref InstanceProfileName
+        Roles:
+            - !Ref 'LocustServiceRole'
+Outputs:
+  RoleName:
+    Value: !Ref 'LocustServiceRole'
+  ProfileName:
+    Value: !Ref 'LocustServiceProfile'
