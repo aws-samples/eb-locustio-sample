@@ -41,7 +41,7 @@ eb-deploy: profile-check eb-init
 			  --branch_default $(SERVICE_ENV) \
 			  --vpc.id $(SERVICE_VPC) \
 			  --vpc.ec2subnets $(SERVICE_EC2_SUBNETS) \
-			  --vpc.elbsubnets $(SERVICE_ELB_SUBNESTS) \
+			  --vpc.elbsubnets $(SERVICE_ELB_SUBNETS) \
 			  --vpc.elbpublic --vpc.publicip \
 			  --envvars TARGET_URL=$(LOCUST_TARGET_URL) \
 			  --region $(SERVICE_REGION)
