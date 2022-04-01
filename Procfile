@@ -9,5 +9,5 @@
 # BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations under the License.
 
-locust-master: /bin/bash -c "exec /usr/local/bin/locust -f locustfile.py --port=9876 --master"
-locust-follower: /bin/bash -c "exec /usr/local/bin/locust -f locustfile.py --port=9876 --slave --master-host=$(<.masterIP)"
+locust-master: /bin/bash -c "exec /usr/local/bin/locust -f locustfile.py --master-port=9876 --master"
+locust-follower: /bin/bash -c "exec /usr/local/bin/locust -f locustfile.py --master-port=9876 --worker --master-host=$(<.masterIP)"
