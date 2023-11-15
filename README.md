@@ -26,3 +26,6 @@ You can get started using the following steps:
   8. When you are done with your tests, run `eb terminate --all` to clean up.
 
 *Note: Running Locust in distributed mode requires a master/slave architecture. This sample requires that the auto scaling minimum and maximum be set to the same value to ensure that the master isn't terminated by auto scaling. If for some reason the master instance is replaced, an `eb deploy` should be all it takes to fix it.*
+
+
+Changing for demo only 
